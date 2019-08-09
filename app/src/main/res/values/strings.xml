@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Laundry Items</string>
+    <string name="itemQuantityHint">Enter Quantity</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="default_laundry_items">
+        <item>Trousers</item>
+        <item>Jeans</item>
+        <item>Shirts</item>
+        <item>T-Shirts</item>
+        <item>Banians</item>
+        <item>Bed Sheets</item>
+        <item>Towels</item>
+    </string-array>
+</resources>
