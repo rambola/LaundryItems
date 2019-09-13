@@ -35,7 +35,7 @@ public class MyDividerItemDecoration extends RecyclerView.ItemDecoration {
         setOrientation(orientation);
     }
 
-    public void setOrientation(int orientation) {
+    private void setOrientation(int orientation) {
         if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
             throw new IllegalArgumentException("invalid orientation");
         }
@@ -51,7 +51,7 @@ public class MyDividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void drawVertical(Canvas c, RecyclerView parent) {
+    private void drawVertical(Canvas c, RecyclerView parent) {
         final int left = parent.getPaddingLeft();
         final int right = parent.getWidth() - parent.getPaddingRight();
 
@@ -62,12 +62,13 @@ public class MyDividerItemDecoration extends RecyclerView.ItemDecoration {
                     .getLayoutParams();
             final int top = child.getBottom() + params.bottomMargin;
             final int bottom = top + mDivider.getIntrinsicHeight();
-            mDivider.setBounds(left + dpToPx(margin), top, right - dpToPx(margin), bottom);
+            mDivider.setBounds(left + dpToPx(margin), top,
+                    right - dpToPx(margin), bottom);
             mDivider.draw(c);
         }
     }
 
-    public void drawHorizontal(Canvas c, RecyclerView parent) {
+    private void drawHorizontal(Canvas c, RecyclerView parent) {
         final int top = parent.getPaddingTop();
         final int bottom = parent.getHeight() - parent.getPaddingBottom();
 
@@ -78,13 +79,15 @@ public class MyDividerItemDecoration extends RecyclerView.ItemDecoration {
                     .getLayoutParams();
             final int left = child.getRight() + params.rightMargin;
             final int right = left + mDivider.getIntrinsicHeight();
-            mDivider.setBounds(left, top + dpToPx(margin), right, bottom - dpToPx(margin));
+            mDivider.setBounds(left, top + dpToPx(margin), right,
+                    bottom - dpToPx(margin));
             mDivider.draw(c);
         }
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                               RecyclerView.State state) {
         if (mOrientation == VERTICAL_LIST) {
             outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
         } else {
@@ -94,6 +97,7 @@ public class MyDividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private int dpToPx(int dp) {
         Resources r = context.getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                r.getDisplayMetrics()));
     }
 }
