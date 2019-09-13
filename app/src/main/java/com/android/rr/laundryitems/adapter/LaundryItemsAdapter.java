@@ -21,6 +21,12 @@ public class LaundryItemsAdapter extends RecyclerView.Adapter<LaundryItemsAdapte
         this.mLaundryItemsList = moviesList;
     }
 
+    public void updateAdapter (List<String> moviesList) {
+        mLaundryItemsList.clear();
+        mLaundryItemsList.addAll(moviesList);
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())

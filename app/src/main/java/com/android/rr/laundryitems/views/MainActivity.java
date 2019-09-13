@@ -10,18 +10,20 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.adapter.LaundryItemsAdapter;
-import com.android.rr.laundryitems.models.MyDividerItemDecoration;
+import com.android.rr.laundryitems.utils.MyDividerItemDecoration;
 import com.android.rr.laundryitems.presenters.MainActivityPresenter;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements
         MainActivityPresenter.MainActivityViewPresenter {
 
-    private MainActivityPresenter mMainActivityPresenter;
     private RecyclerView mRecyclerView;
     private FloatingActionButton mFloatingActionButton;
     private TextView mPrevSavedTV;
@@ -40,12 +42,23 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMainActivityPresenter = new MainActivityPresenter(MainActivity.this);
+        MainActivityPresenter mMainActivityPresenter = new MainActivityPresenter(MainActivity.this);
         mRecyclerView = findViewById(R.id.recycler_view);
         mFloatingActionButton = findViewById(R.id.fab);
         mPrevSavedTV = findViewById(R.id.prevSavedItemsTV);
         mAddItemTV = findViewById(R.id.addLaundryItemTV);
+
         mDeleteItemTV = findViewById(R.id.deleteLaundryItemTV);
+        findViewById(R.id.saveLaundryDetailsBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    getLaundryDataAndSaveToDB();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
@@ -84,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements
             mAddItemTV.setClickable(false);
             mDeleteItemTV.setClickable(false);
             mIsFabOpen = false;
-            Log.d(TAG, "animateFAB()... close");
         } else {
             mFloatingActionButton.startAnimation(rotate_forward);
             mPrevSavedTV.startAnimation(fab_open);
@@ -94,7 +106,20 @@ public class MainActivity extends AppCompatActivity implements
             mAddItemTV.setClickable(true);
             mDeleteItemTV.setClickable(true);
             mIsFabOpen = true;
-            Log.d(TAG,"animateFAB()... open");
+        }
+    }
+
+    private void getLaundryDataAndSaveToDB () throws NullPointerException {
+        int recyclerItemCount = mRecyclerView.getAdapter().getItemCount();
+        Log.e(TAG, "getLaundryDataAndSaveToDB, adapterItemCount: "+recyclerItemCount);
+
+        for (int i=0; i<recyclerItemCount; i++) {
+            View view = mRecyclerView.getChildAt(i);
+            TextView textView = view.findViewById(R.id.itemNameTV);
+            EditText editText = view.findViewById(R.id.itemQuantityET);
+
+            Log.e(TAG, "itemNameTV: "+textView.getText().toString().trim()+
+                    ", quantity: "+editText.getText().toString());
         }
     }
 

@@ -38,41 +38,37 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/fab"
         android:layout_alignParentEnd="true"
-        android:orientation="vertical"
-        android:gravity="end">
-
-        <TextView
-            android:id="@+id/deleteLaundryItemTV"
-            android:layout_width="wrap_content"
-            android:layout_height="31dp"
-            android:textSize="18sp"
-            android:text="@string/delete_items"
-            android:textColor="@android:color/black"
-            android:visibility="invisible"
-            android:background="@drawable/tv_bg"
-            android:gravity="center_vertical"/>
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/addLaundryItemTV"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="31dp"
             android:visibility="invisible"
             android:textSize="18sp"
             android:text="@string/add_item"
-            android:textColor="@android:color/black"
-            android:background="@drawable/tv_bg"
-            android:gravity="center_vertical"/>
+            android:textColor="@color/colorPrimaryDark"
+            android:textAlignment="viewEnd"/>
+
+        <TextView
+            android:id="@+id/deleteLaundryItemTV"
+            android:layout_width="match_parent"
+            android:layout_height="31dp"
+            android:textSize="18sp"
+            android:text="@string/delete_items"
+            android:textColor="@color/colorPrimaryDark"
+            android:visibility="invisible"
+            android:textAlignment="viewEnd"/>
 
         <TextView
             android:id="@+id/prevSavedItemsTV"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="31dp"
             android:visibility="invisible"
             android:textSize="18sp"
             android:text="@string/prev_laundry_info"
-            android:textColor="@android:color/black"
-            android:background="@drawable/tv_bg"
-            android:gravity="center_vertical"/>
+            android:textColor="@color/colorPrimaryDark"
+            android:textAlignment="viewEnd"/>
 
     </LinearLayout>
 
@@ -85,10 +81,10 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginTop="4dp"
-        android:src="@android:drawable/ic_menu_manage" />
+        android:src="@mipmap/more" />
 
     <Button
-        android:id="@+id/saveBtn"
+        android:id="@+id/saveLaundryDetailsBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save"

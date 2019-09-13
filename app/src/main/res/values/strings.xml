@@ -2,7 +2,8 @@
     <string name="app_name">Laundry Items</string>
     <string name="itemQuantityHint">Enter Quantity</string>
     <string name="prev_laundry_info">Prev Laundry Info</string>
-    <string name="add_item">Add Item</string>
+    <string name="add_item">Add New Item</string>
     <string name="delete_items">Delete Items</string>
     <string name="save">Save</string>
+    <string name="enterNewItem">Enter new laundry item</string>
 </resources>

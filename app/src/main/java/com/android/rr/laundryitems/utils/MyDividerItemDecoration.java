@@ -1,4 +1,4 @@
-package com.android.rr.laundryitems.models;
+package com.android.rr.laundryitems.utils;
 
 import android.content.Context;
 import android.content.res.Resources;

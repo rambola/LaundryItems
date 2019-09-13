@@ -42,13 +42,14 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertLaundryItem (String laundryyItemName) {
+    public void insertLaundryItem (String laundryItemName) {
         mSqLiteDatabase = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ITEM_NAME, laundryyItemName);
+        contentValues.put(COLUMN_ITEM_NAME, laundryItemName);
 
-        mSqLiteDatabase.insert(ITEM_NAMES_TABLE, null, contentValues);
+        mSqLiteDatabase.insertWithOnConflict(ITEM_NAMES_TABLE, null,
+                contentValues, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
     public List<String> getLaundryItems () {
@@ -78,33 +79,35 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
         return null != cursor ? cursor.getCount() : -4;
     }
 
-    public void deleteLaundryItems (String[] laundryItemsToDelete) {
-        if (null != laundryItemsToDelete && laundryItemsToDelete.length > 0) {
+    public void deleteLaundryItem (String laundryItemsToDelete) {
+//        if (null != laundryItemsToDelete && laundryItemsToDelete.length > 0) {
             mSqLiteDatabase = this.getWritableDatabase();
             String whereClause = COLUMN_ITEM_NAME + "=?";
-            mSqLiteDatabase.delete(ITEM_NAMES_TABLE, whereClause, laundryItemsToDelete);
-        }
+            String[] whereArgs = {laundryItemsToDelete};
+            mSqLiteDatabase.delete(ITEM_NAMES_TABLE, whereClause, whereArgs);
+//        }
     }
 
-    public void saveLaundryItem (List<LaundryItemsModel> laundryItemsModels) {
+    public void saveLaundryItemsDetails (List<LaundryItemsModel> laundryItemsModels) {
         mSqLiteDatabase = this.getWritableDatabase();
 
         for (LaundryItemsModel laundryItemsModel : laundryItemsModels) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_ITEM_NAME, laundryItemsModel.getItemName());
             contentValues.put(COLUMN_ITEM_QUANTITY, laundryItemsModel.getItemQuantity());
+            contentValues.put(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS,
+                    laundryItemsModel.getDateTimeInMillis());
 
-            mSqLiteDatabase.insertWithOnConflict(ITEM_NAMES_TABLE, null, contentValues,
-                    SQLiteDatabase.CONFLICT_REPLACE);
+            mSqLiteDatabase.insert(SAVE_ITEMS_TABLE, null, contentValues);
         }
     }
 
-    public List<LaundryItemsModel> getSavedLaundryItems () {
+    public List<LaundryItemsModel> getSavedLaundryItemsDetails () {
         List<LaundryItemsModel> savedLaundryItems = null;
 
         mSqLiteDatabase = this.getReadableDatabase();
-        String orderBy = COLUMN_ITEM_NAME+" ASC";
-        Cursor cursor = mSqLiteDatabase.query(ITEM_NAMES_TABLE, null, null,
+        String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" ASC";
+        Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, null, null,
                 null, null, null, orderBy);
 
         if (null != cursor && cursor.getCount() > 0) {
@@ -115,15 +118,16 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
                 savedLaundryItems.add(new LaundryItemsModel(
                         cursor.getString(cursor.getColumnIndex(COLUMN_ITEM_NAME)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_ITEM_QUANTITY)),
-                        cursor.getLong(cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))));
+                        cursor.getLong(cursor.getColumnIndex(
+                                COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))));
         }
 
         return  savedLaundryItems;
     }
 
-    /*public void deleteSavedLaundryItems (String[] laundryItemsToDelete) {
+    /*public void deleteSavedLaundryItemsDetails (String[] laundryItemsToDelete) {
 
-    }*//*public void deleteSavedLaundryItems (String[] laundryItemsToDelete) {
+    }*//*public void deleteSavedLaundryItemsDetails (String[] laundryItemsToDelete) {
 
     }*/
 
