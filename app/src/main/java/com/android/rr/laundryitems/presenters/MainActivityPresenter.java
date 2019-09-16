@@ -1,12 +1,20 @@
 package com.android.rr.laundryitems.presenters;
 
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.adapter.LaundryItemsAdapter;
 import com.android.rr.laundryitems.models.LaundryItemsDB;
+import com.android.rr.laundryitems.models.LaundryItemsModel;
 import com.android.rr.laundryitems.utils.LaundryItemsDialog;
+import com.android.rr.laundryitems.utils.RootViewTreeObserver;
 import com.android.rr.laundryitems.views.MainActivity;
 
 import java.util.ArrayList;
@@ -38,6 +46,10 @@ public class MainActivityPresenter implements View.OnClickListener {
     private void addLaundryItem () {
         new LaundryItemsDialog(mMainActivity,MainActivityPresenter.this,
                 "add").show();
+    }
+
+    private void saveLaundryItemsDetails (List<LaundryItemsModel> laundryItemsModels) {
+        mLaundryItemsDB.saveLaundryItemsDetails(laundryItemsModels);
     }
 
     public void saveLaundryItem (String item) {
@@ -99,9 +111,56 @@ public class MainActivityPresenter implements View.OnClickListener {
         }
     }
 
+    public void getLaundryDataAndSaveToDB (RecyclerView recyclerView) throws NullPointerException {
+        int recyclerItemCount = recyclerView.getAdapter().getItemCount();
+        int emptyFieldsCount = 0;
+        List<LaundryItemsModel> laundryItemsModels = null;
+        long currentDateTimeInMillis = System.currentTimeMillis();
+        Log.e(TAG, "getLaundryDataAndSaveToDB, adapterItemCount: "+recyclerItemCount);
+
+        for (int i=0; i<recyclerItemCount; i++) {
+            View view = recyclerView.getChildAt(i);
+            TextView textView = view.findViewById(R.id.itemNameTV);
+            EditText editText = view.findViewById(R.id.itemQuantityET);
+
+            String laundryItem = textView.getText().toString().trim();
+            String itemQuantity = editText.getText().toString().trim();
+
+            Log.e(TAG, "itemNameTV: "+laundryItem+ ", quantity: "+itemQuantity+
+                    ", currentDateTimeInMillis: "+ currentDateTimeInMillis+", emptyFieldsCount: "+
+                    emptyFieldsCount);
+
+            if (TextUtils.isEmpty(itemQuantity)) {
+                emptyFieldsCount++;
+                continue;
+            }
+
+            laundryItemsModels = new ArrayList<>();
+            laundryItemsModels.add(new LaundryItemsModel(laundryItem, itemQuantity,
+                    currentDateTimeInMillis));
+        }
+
+        if (emptyFieldsCount == recyclerItemCount)
+            Toast.makeText(mMainActivity, "Please fill the quantity for items...",
+                    Toast.LENGTH_SHORT).show();
+        else
+            saveLaundryItemsDetails(laundryItemsModels);
+    }
+
+    public void registerForObserver (View view) {
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new RootViewTreeObserver(
+                mMainActivity, (RelativeLayout) view));
+    }
+
+    public void unRegisterForObserver (View view) {
+        view.getViewTreeObserver().removeOnGlobalLayoutListener(new RootViewTreeObserver(
+                mMainActivity, (RelativeLayout) view));
+    }
+
     public interface MainActivityViewPresenter {
         void setAdapter(LaundryItemsAdapter laundryItemsAdapter);
         void animateFAB();
+        void checkAndCloseFAB(boolean isKeyboardOpen);
     }
 
 }

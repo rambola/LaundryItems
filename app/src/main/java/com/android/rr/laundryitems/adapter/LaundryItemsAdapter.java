@@ -2,11 +2,9 @@ package com.android.rr.laundryitems.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.rr.laundryitems.R;
@@ -48,12 +46,12 @@ public class LaundryItemsAdapter extends RecyclerView.Adapter<LaundryItemsAdapte
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView itemNameTV;
-        private EditText itemQuantityET;
+//        private EditText itemQuantityET;
 
         private MyViewHolder(View view) {
             super(view);
             itemNameTV = view.findViewById(R.id.itemNameTV);
-            itemQuantityET = view.findViewById(R.id.itemQuantityET);
+//            itemQuantityET = view.findViewById(R.id.itemQuantityET);
         }
     }
 

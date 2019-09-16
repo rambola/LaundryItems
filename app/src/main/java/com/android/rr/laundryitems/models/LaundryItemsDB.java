@@ -5,11 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LaundryItemsDB extends SQLiteOpenHelper {
+    private final String TAG = LaundryItemsDB.class.getSimpleName();
     private static final int DB_VERSION = 1;
     private static final String DB_NAME = "LaundryItemDB";
     private final String ITEM_NAMES_TABLE = "ItemsNamesTable";
@@ -102,13 +106,60 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
         }
     }
 
-    public List<LaundryItemsModel> getSavedLaundryItemsDetails () {
-        List<LaundryItemsModel> savedLaundryItems = null;
+    public List<LauncherItemsDetailsModel> getSavedLaundryItemsDetails () {
+        HashMap<String, Long> dateTimeInMills = getDateTimeInMillis();
+        List<LauncherItemsDetailsModel> launcherItemsDetailsModels = new ArrayList<>();
 
+        if (null != dateTimeInMills && dateTimeInMills.size() > 0) {
+            for (Map.Entry<String, Long> entry : dateTimeInMills.entrySet()) {
+                Log.i(TAG, "getSavedLaundryItemsDetails... key: " + entry.getKey() +
+                        ", value: " + entry.getValue());
+                List<LaundryItemsModel> laundryItemsModels = getLaundryDetailsForGivenTime(
+                        entry.getValue());
+                LauncherItemsDetailsModel launcherItemsDetailsModel = new LauncherItemsDetailsModel();
+                launcherItemsDetailsModel.setDateTimeInMillis(entry.getValue());
+                launcherItemsDetailsModel.setLaundryItemsModels(laundryItemsModels);
+
+                launcherItemsDetailsModels.add(launcherItemsDetailsModel);
+            }
+        }
+
+        Log.i(TAG, "getSavedLaundryItemsDetails... before return size: "+
+                launcherItemsDetailsModels.size());
+        return  launcherItemsDetailsModels;
+    }
+
+    private HashMap<String, Long> getDateTimeInMillis () {
+        HashMap<String, Long> dateTimeMillsMap = new HashMap<>();
         mSqLiteDatabase = this.getReadableDatabase();
         String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" ASC";
-        Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, null, null,
+        String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
+        Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, null,
                 null, null, null, orderBy);
+
+        if (null != cursor && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            int count=0;
+
+            while (cursor.moveToNext()) {
+                Log.i(TAG, "getDateTimeInMillis().. dateTimeInMillis.. "+cursor.getLong(
+                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))+", count: "+count);
+                dateTimeMillsMap.put("dateTimeInMillis"+count, cursor.getLong(
+                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
+            }
+        }
+
+        Log.i(TAG, "getDateTimeInMillis().. before return map size is: "+dateTimeMillsMap.size());
+        return dateTimeMillsMap;
+    }
+
+    private List<LaundryItemsModel> getLaundryDetailsForGivenTime (long dateTimeInMillis) {
+        List<LaundryItemsModel> savedLaundryItems = null;
+        mSqLiteDatabase = this.getReadableDatabase();
+        String selection = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+"=?";
+        String[] selectionArgs = {String.valueOf(dateTimeInMillis)};
+        Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, null, selection,
+                selectionArgs, null, null, null);
 
         if (null != cursor && cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -122,7 +173,9 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
                                 COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))));
         }
 
-        return  savedLaundryItems;
+        Log.i(TAG, "getLaundryDetailsForGivenTime... before return size: "+
+                (null != savedLaundryItems ? savedLaundryItems.size() : -1));
+        return savedLaundryItems;
     }
 
     /*public void deleteSavedLaundryItemsDetails (String[] laundryItemsToDelete) {

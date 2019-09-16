@@ -11,15 +11,15 @@ public class LaundryItemsModel {
         this.dateTimeInMillis = dateTimeInMillis;
     }
 
-    public String getItemName() {
+    String getItemName() {
         return itemName;
     }
 
-    public String getItemQuantity() {
+    String getItemQuantity() {
         return itemQuantity;
     }
 
-    public long getDateTimeInMillis() {
+    long getDateTimeInMillis() {
         return dateTimeInMillis;
     }
 
