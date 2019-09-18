@@ -1,5 +1,6 @@
 package com.android.rr.laundryitems.presenters;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.android.rr.laundryitems.models.LaundryItemsDB;
 import com.android.rr.laundryitems.models.LaundryItemsModel;
 import com.android.rr.laundryitems.utils.LaundryItemsDialog;
 import com.android.rr.laundryitems.utils.RootViewTreeObserver;
+import com.android.rr.laundryitems.views.LaundryDetailsActivity;
 import com.android.rr.laundryitems.views.MainActivity;
 
 import java.util.ArrayList;
@@ -39,8 +41,10 @@ public class MainActivityPresenter implements View.OnClickListener {
     }
 
     private void showLaundryItems () {
-        new LaundryItemsDialog(mMainActivity, MainActivityPresenter.this,
-                "show").show();
+        if (mLaundryItemsDB.getSavedLaundryItemsDetails().size() > 0)
+            mMainActivity.startActivity(new Intent(mMainActivity, LaundryDetailsActivity.class));
+        else
+            Toast.makeText(mMainActivity, "No saved items to show...", Toast.LENGTH_SHORT).show();
     }
 
     private void addLaundryItem () {

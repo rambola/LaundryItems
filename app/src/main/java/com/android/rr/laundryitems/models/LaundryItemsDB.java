@@ -160,17 +160,22 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
         String[] selectionArgs = {String.valueOf(dateTimeInMillis)};
         Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, null, selection,
                 selectionArgs, null, null, null);
+        Log.e(TAG, "getLaundryDetailsForGivenTime... dateTimeInMillis.. "+dateTimeInMillis+", cursor size: "+(null != cursor ? cursor.getCount() : -1));
 
         if (null != cursor && cursor.getCount() > 0) {
-            cursor.moveToFirst();
+//            cursor.moveToFirst();
             savedLaundryItems = new ArrayList<>();
 
-            while (cursor.moveToNext())
+            while (cursor.moveToNext()) {
                 savedLaundryItems.add(new LaundryItemsModel(
                         cursor.getString(cursor.getColumnIndex(COLUMN_ITEM_NAME)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_ITEM_QUANTITY)),
                         cursor.getLong(cursor.getColumnIndex(
                                 COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))));
+
+                Log.i(TAG, "getLaundryDetailsForGivenTime... inside while: "+
+                        (null != savedLaundryItems ? savedLaundryItems.size() : -1));
+            }
         }
 
         Log.i(TAG, "getLaundryDetailsForGivenTime... before return size: "+

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    card_view:cardBackgroundColor="@android:color/holo_blue_light"
+    card_view:cardBackgroundColor="@color/colorPrimary"
     card_view:cardCornerRadius="10dp"
     card_view:cardElevation="5dp"
     card_view:cardUseCompatPadding="true">
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="22sp"
-            android:text="jghagjad"
+            android:text="@string/date_time"
             android:textColor="@android:color/white"/>
 
         <TextView
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="22sp"
-            android:text="eirgarjrkg"
+            android:text="@string/total_count"
             android:textColor="@android:color/white"
             android:layout_marginTop="11dp"/>
 

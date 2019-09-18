@@ -7,11 +7,11 @@ public class LauncherItemsDetailsModel {
     private List<LaundryItemsModel> laundryItemsModels;
 
     public long getDateTimeInMillis() {
-        return dateTimeInMillis;
+        return this.dateTimeInMillis;
     }
 
     public List<LaundryItemsModel> getLaundryItemsModels() {
-        return laundryItemsModels;
+        return this.laundryItemsModels;
     }
 
     void setDateTimeInMillis(long dateTimeInMillis) {

@@ -25,8 +25,8 @@ public class LaundryDetailsActivity extends AppCompatActivity implements
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new MyDividerItemDecoration(
-                getApplicationContext(), LinearLayoutManager.VERTICAL, 9));
+//        mRecyclerView.addItemDecoration(new MyDividerItemDecoration(
+//                getApplicationContext(), LinearLayoutManager.VERTICAL, 9));
 
         mLaundryDetailsActivityPresenter = new LaundryDetailsActivityPresenter(
                 LaundryDetailsActivity.this);

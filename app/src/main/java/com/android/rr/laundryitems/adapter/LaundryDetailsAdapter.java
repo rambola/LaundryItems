@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,16 @@ import com.android.rr.laundryitems.presenters.LaundryDetailsActivityPresenter;
 import java.util.List;
 
 public class LaundryDetailsAdapter extends RecyclerView.Adapter<LaundryDetailsAdapter.MyViewHolder> {
+    private final String TAG = LaundryDetailsAdapter.class.getSimpleName();
+
+    private Context mContext;
     private List<LauncherItemsDetailsModel> mLauncherItemsDetailsModels;
     private LaundryDetailsActivityPresenter mLaundryDetailsActivityPresenter;
 
     public LaundryDetailsAdapter (Context context,
                                   LaundryDetailsActivityPresenter laundryDetailsActivityPresenter,
                                   List<LauncherItemsDetailsModel> launcherItemsDetailsModels) {
+        mContext = context;
         mLauncherItemsDetailsModels = launcherItemsDetailsModels;
         mLaundryDetailsActivityPresenter = laundryDetailsActivityPresenter;
     }
@@ -36,10 +41,15 @@ public class LaundryDetailsAdapter extends RecyclerView.Adapter<LaundryDetailsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        myViewHolder.mDateTimeTV.setText(convertMillisToDateTime(mLauncherItemsDetailsModels.get(i).
-                getDateTimeInMillis()));
-        myViewHolder.mTotalCountTV.setText(mLauncherItemsDetailsModels.get(i).
+        Log.e(TAG, "onBindViewHolder... date: "+mLauncherItemsDetailsModels.get(i).
+                getDateTimeInMillis());
+        Log.e(TAG, "onBindViewHolder... date: "+mLauncherItemsDetailsModels.get(i).
                 getLaundryItemsModels().size());
+        String convertedDateTime = convertMillisToDateTime(mLauncherItemsDetailsModels.get(i).
+                getDateTimeInMillis());
+        int totalCount = mLauncherItemsDetailsModels.get(i).getLaundryItemsModels().size();
+        myViewHolder.mDateTimeTV.setText(mContext.getString(R.string.date_time, convertedDateTime));
+        myViewHolder.mTotalCountTV.setText(mContext.getString(R.string.total_count, totalCount));
         myViewHolder.mCardView.setOnClickListener(new MyClickListener(i));
     }
 
