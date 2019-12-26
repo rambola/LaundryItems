@@ -14,6 +14,7 @@ public class LaundryDetailsActivityPresenter {
     private LaundryDetailsActivity mLaundryDetailsActivity;
     private LaundryDetailsAdapter mLaundryDetailsAdapter;
     private LaundryItemsDB mLaundryItemsDB;
+    private List<LauncherItemsDetailsModel> mLauncherItemsDetailsModels;
 
     public LaundryDetailsActivityPresenter (LaundryDetailsActivity laundryDetailsActivity) {
         mLaundryDetailsActivity = laundryDetailsActivity;
@@ -21,11 +22,10 @@ public class LaundryDetailsActivityPresenter {
     }
 
     public void initializeAdapter () {
-        List<LauncherItemsDetailsModel> launcherItemsDetailsModels = mLaundryItemsDB.
-                getSavedLaundryItemsDetails();
+        mLauncherItemsDetailsModels = mLaundryItemsDB.getSavedLaundryItemsDetails();
         mLaundryDetailsAdapter = new LaundryDetailsAdapter(mLaundryDetailsActivity,
                 LaundryDetailsActivityPresenter.this,
-                launcherItemsDetailsModels);
+                mLauncherItemsDetailsModels);
         mLaundryDetailsActivity.setAdapter(mLaundryDetailsAdapter);
     }
 

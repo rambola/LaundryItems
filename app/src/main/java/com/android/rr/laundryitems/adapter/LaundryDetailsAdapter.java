@@ -50,6 +50,7 @@ public class LaundryDetailsAdapter extends RecyclerView.Adapter<LaundryDetailsAd
         int totalCount = mLauncherItemsDetailsModels.get(i).getLaundryItemsModels().size();
         myViewHolder.mDateTimeTV.setText(mContext.getString(R.string.date_time, convertedDateTime));
         myViewHolder.mTotalCountTV.setText(mContext.getString(R.string.total_count, totalCount));
+
         myViewHolder.mCardView.setOnClickListener(new MyClickListener(i));
     }
 

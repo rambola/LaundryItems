@@ -54,6 +54,7 @@ public class MainActivityPresenter implements View.OnClickListener {
 
     private void saveLaundryItemsDetails (List<LaundryItemsModel> laundryItemsModels) {
         mLaundryItemsDB.saveLaundryItemsDetails(laundryItemsModels);
+        resetLaundryItems() ;
     }
 
     public void saveLaundryItem (String item) {
@@ -63,6 +64,14 @@ public class MainActivityPresenter implements View.OnClickListener {
 
         mLaundryItemsList = mLaundryItemsDB.getLaundryItems();
         mLaundryItemsAdapter.updateAdapter(mLaundryItemsList);
+    }
+
+    private void resetLaundryItems () {
+        if (null != mLaundryItemsList && mLaundryItemsList.size() > 0)
+            mLaundryItemsList.clear();
+
+        mLaundryItemsList = mLaundryItemsDB.getLaundryItems();
+        mLaundryItemsAdapter.resetFields(mLaundryItemsList) ;
     }
 
     private void deleteLaundryItem () {
@@ -118,7 +127,7 @@ public class MainActivityPresenter implements View.OnClickListener {
     public void getLaundryDataAndSaveToDB (RecyclerView recyclerView) throws NullPointerException {
         int recyclerItemCount = recyclerView.getAdapter().getItemCount();
         int emptyFieldsCount = 0;
-        List<LaundryItemsModel> laundryItemsModels = null;
+        List<LaundryItemsModel> laundryItemsModels = new ArrayList<>();;
         long currentDateTimeInMillis = System.currentTimeMillis();
         Log.e(TAG, "getLaundryDataAndSaveToDB, adapterItemCount: "+recyclerItemCount);
 
@@ -139,7 +148,6 @@ public class MainActivityPresenter implements View.OnClickListener {
                 continue;
             }
 
-            laundryItemsModels = new ArrayList<>();
             laundryItemsModels.add(new LaundryItemsModel(laundryItem, itemQuantity,
                     currentDateTimeInMillis));
         }

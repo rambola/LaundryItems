@@ -24,9 +24,9 @@
         <TextView
             android:id="@+id/addLaundryItemTV"
             android:layout_width="match_parent"
-            android:layout_height="31dp"
+            android:layout_height="40dp"
             android:visibility="invisible"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:text="@string/add_item"
             android:textColor="@color/colorPrimaryDark"
             android:textAlignment="viewEnd"/>
@@ -34,8 +34,8 @@
         <TextView
             android:id="@+id/deleteLaundryItemTV"
             android:layout_width="match_parent"
-            android:layout_height="31dp"
-            android:textSize="18sp"
+            android:layout_height="40dp"
+            android:textSize="20sp"
             android:text="@string/delete_items"
             android:textColor="@color/colorPrimaryDark"
             android:visibility="invisible"
@@ -44,9 +44,9 @@
         <TextView
             android:id="@+id/prevSavedItemsTV"
             android:layout_width="match_parent"
-            android:layout_height="31dp"
+            android:layout_height="40dp"
             android:visibility="invisible"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:text="@string/prev_laundry_info"
             android:textColor="@color/colorPrimaryDark"
             android:textAlignment="viewEnd"/>

@@ -94,7 +94,7 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
 
     public void saveLaundryItemsDetails (List<LaundryItemsModel> laundryItemsModels) {
         mSqLiteDatabase = this.getWritableDatabase();
-
+        Log.e(TAG, "saveLaundryItemDetails..... laundryItemsModels: "+laundryItemsModels.size());
         for (LaundryItemsModel laundryItemsModel : laundryItemsModels) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_ITEM_NAME, laundryItemsModel.getItemName());
@@ -107,32 +107,32 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
     }
 
     public List<LauncherItemsDetailsModel> getSavedLaundryItemsDetails () {
-        HashMap<String, Long> dateTimeInMills = getDateTimeInMillis();
-        List<LauncherItemsDetailsModel> launcherItemsDetailsModels = new ArrayList<>();
+        //HashMap<String, Long> dateTimeInMills = getDateTimeInMillis();
+        List<Long> dateTimeInMillsList = getDateTimeInMillis();
+        List<LauncherItemsDetailsModel> laundryItemsDetailsModels = new ArrayList<>();
 
-        if (null != dateTimeInMills && dateTimeInMills.size() > 0) {
-            for (Map.Entry<String, Long> entry : dateTimeInMills.entrySet()) {
-                Log.i(TAG, "getSavedLaundryItemsDetails... key: " + entry.getKey() +
-                        ", value: " + entry.getValue());
+        if (null != dateTimeInMillsList && dateTimeInMillsList.size() > 0) {
+            for (long dateTimeInMillis : dateTimeInMillsList) {
+                Log.i(TAG, "getSavedLaundryItemsDetails... dateTimeInMillis: "+dateTimeInMillis);
                 List<LaundryItemsModel> laundryItemsModels = getLaundryDetailsForGivenTime(
-                        entry.getValue());
+                        dateTimeInMillis);
                 LauncherItemsDetailsModel launcherItemsDetailsModel = new LauncherItemsDetailsModel();
-                launcherItemsDetailsModel.setDateTimeInMillis(entry.getValue());
+                launcherItemsDetailsModel.setDateTimeInMillis(dateTimeInMillis);
                 launcherItemsDetailsModel.setLaundryItemsModels(laundryItemsModels);
 
-                launcherItemsDetailsModels.add(launcherItemsDetailsModel);
+                laundryItemsDetailsModels.add(launcherItemsDetailsModel);
             }
         }
 
         Log.i(TAG, "getSavedLaundryItemsDetails... before return size: "+
-                launcherItemsDetailsModels.size());
-        return  launcherItemsDetailsModels;
+                laundryItemsDetailsModels.size());
+        return  laundryItemsDetailsModels;
     }
 
-    private HashMap<String, Long> getDateTimeInMillis () {
+    /*private HashMap<String, Long> getDateTimeInMillis () {
         HashMap<String, Long> dateTimeMillsMap = new HashMap<>();
         mSqLiteDatabase = this.getReadableDatabase();
-        String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" ASC";
+        String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" DESC";
         String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
         Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, null,
                 null, null, null, orderBy);
@@ -146,11 +146,37 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
                         cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))+", count: "+count);
                 dateTimeMillsMap.put("dateTimeInMillis"+count, cursor.getLong(
                         cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
+                count++;
             }
         }
 
         Log.i(TAG, "getDateTimeInMillis().. before return map size is: "+dateTimeMillsMap.size());
         return dateTimeMillsMap;
+    }*/
+
+    private List<Long> getDateTimeInMillis () {
+        List<Long> dateTimeMillsList = new ArrayList<>();
+        mSqLiteDatabase = this.getReadableDatabase();
+        String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" DESC";
+        String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
+        Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, null,
+                null, null, null, orderBy);
+
+        if (null != cursor && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            int count=0;
+
+            while (cursor.moveToNext()) {
+                Log.i(TAG, "getDateTimeInMillis().. dateTimeInMillis.. "+cursor.getLong(
+                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))+", count: "+count);
+                dateTimeMillsList.add(cursor.getLong(
+                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
+                count++;
+            }
+        }
+
+        Log.i(TAG, "getDateTimeInMillis().. before return map size is: "+dateTimeMillsList.size());
+        return dateTimeMillsList;
     }
 
     private List<LaundryItemsModel> getLaundryDetailsForGivenTime (long dateTimeInMillis) {

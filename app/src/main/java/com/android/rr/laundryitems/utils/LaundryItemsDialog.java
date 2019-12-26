@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.adapter.ItemsDeleteAdapter;
