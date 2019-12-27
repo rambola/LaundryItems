@@ -107,7 +107,6 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
     }
 
     public List<LauncherItemsDetailsModel> getSavedLaundryItemsDetails () {
-        //HashMap<String, Long> dateTimeInMills = getDateTimeInMillis();
         List<Long> dateTimeInMillsList = getDateTimeInMillis();
         List<LauncherItemsDetailsModel> laundryItemsDetailsModels = new ArrayList<>();
 
@@ -157,21 +156,18 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
     private List<Long> getDateTimeInMillis () {
         List<Long> dateTimeMillsList = new ArrayList<>();
         mSqLiteDatabase = this.getReadableDatabase();
-        String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" DESC";
+
         String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
+        String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" DESC";
         Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, null,
                 null, null, null, orderBy);
 
         if (null != cursor && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            int count=0;
-
             while (cursor.moveToNext()) {
                 Log.i(TAG, "getDateTimeInMillis().. dateTimeInMillis.. "+cursor.getLong(
-                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))+", count: "+count);
+                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
                 dateTimeMillsList.add(cursor.getLong(
                         cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
-                count++;
             }
         }
 
@@ -209,10 +205,42 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
         return savedLaundryItems;
     }
 
-    /*public void deleteSavedLaundryItemsDetails (String[] laundryItemsToDelete) {
+    public void deleteOlderSavedLaundryDetails () {
+        final long sixMonthsInDays = 6 * 30;
+        final long sixMonthsInHours = sixMonthsInDays * 24;
+        final long sixMonthsInMinutes = sixMonthsInHours * 60;
+        final long sixMonthsInSeconds = sixMonthsInMinutes * 60;
+        final long sixMonthsTimeInMillis  = sixMonthsInSeconds * 1000;
+        final long currentTimeInMillis = System.currentTimeMillis();
+        final long sixMonthsTimeInMillisFromCurrent = currentTimeInMillis - sixMonthsTimeInMillis;
 
-    }*//*public void deleteSavedLaundryItemsDetails (String[] laundryItemsToDelete) {
+        Log.e(TAG, "deleteOlderSavedLaundryDetails... sixMonthsTimeInMillisFromCurrent: "+sixMonthsTimeInMillisFromCurrent);
+        final String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
+        final String whereClause = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+"<=?";
+        final String[] whereArgs = {String.valueOf(sixMonthsTimeInMillisFromCurrent)};
 
-    }*/
+        mSqLiteDatabase = this.getReadableDatabase();
+        final Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, whereClause, whereArgs,
+                null, null, null);
+        Log.e(TAG, "deleteOlderSavedLaundryDetails... cursor count: "+(null != cursor?cursor.getCount():-1));
+        if (null != cursor && cursor.getCount() > 0) {
+            while(cursor.moveToNext()) {
+                final String dateTimeInMillisToDelete = String.valueOf(cursor.getLong(
+                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
+                Log.e(TAG, "deleteOlderSavedLaundryDetails... dateTimeInMillisToDelete: "+
+                        dateTimeInMillisToDelete);
+                deleteSavedLaundryItemBaseOnTime(dateTimeInMillisToDelete);
+            }
+        }
+    }
+
+    private void deleteSavedLaundryItemBaseOnTime (String timeInMillis) {
+        Log.e(TAG, "deleteSavedLaundryItemBaseOnTime... timeInMillis: "+timeInMillis);
+        final String whereClause = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+"=?";
+        final String[] whereArgs = {String.valueOf(timeInMillis)};
+
+        mSqLiteDatabase = this.getWritableDatabase();
+        mSqLiteDatabase.delete(SAVE_ITEMS_TABLE, whereClause, whereArgs);
+    }
 
 }

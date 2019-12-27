@@ -2,18 +2,23 @@ package com.android.rr.laundryitems.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.adapter.ItemsDeleteAdapter;
+import com.android.rr.laundryitems.adapter.SelectedPrevItemDetailsAdapter;
+import com.android.rr.laundryitems.models.LauncherItemsDetailsModel;
 import com.android.rr.laundryitems.models.LaundryItemsDB;
 import com.android.rr.laundryitems.presenters.MainActivityPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LaundryItemsDialog {
@@ -24,12 +29,23 @@ public class LaundryItemsDialog {
     private AlertDialog mDialog;
     private Context mContext;
     private MainActivityPresenter mMainActivityPresenter;
+    final private LauncherItemsDetailsModel  mLauncherItemsDetailsModel;
 
     public LaundryItemsDialog(Context context, MainActivityPresenter mainActivityPresenter,
                               String showDialogFor) {
         mContext = context;
         mMainActivityPresenter = mainActivityPresenter;
+        mLauncherItemsDetailsModel = null;
         mShowDialogFor = showDialogFor;
+        dismiss();
+        mInflater = LayoutInflater.from(context);
+        mAlert = new AlertDialog.Builder(context);
+    }
+
+    public LaundryItemsDialog (Context context, LauncherItemsDetailsModel launcherItemsDetailsModel) {
+        mContext = context;
+        mLauncherItemsDetailsModel = launcherItemsDetailsModel;
+        mShowDialogFor = "";
         dismiss();
         mInflater = LayoutInflater.from(context);
         mAlert = new AlertDialog.Builder(context);
@@ -66,15 +82,23 @@ public class LaundryItemsDialog {
         LaundryItemsDB laundryItemsDB = new LaundryItemsDB(mContext);
         List<String> itemsList = laundryItemsDB.getLaundryItems();
 
-//        ItemsDeleteAdapter itemsDeleteAdapter = new ItemsDeleteAdapter(mContext, itemsList);
         listView.setAdapter(new ItemsDeleteAdapter(mContext, mMainActivityPresenter, itemsList));
 
-        // this is set the view from XML inside AlertDialog
+        // this is to set the view from XML inside AlertDialog
         mAlert.setView(alertLayout);
     }
 
     private void createShowItemsDialog() {
+        View alertLayout = mInflater.inflate(R.layout.layout_selected_prev_item_details, null);
+        final ListView listView = alertLayout.findViewById(R.id.selectedPrevListItemDetailsLV);
+        TextView dateTimeTV = alertLayout.findViewById(R.id.selectedListItemDateTimeTV);
+        dateTimeTV.setText(convertMillisToDateTime(mLauncherItemsDetailsModel.getDateTimeInMillis()));
 
+        listView.setAdapter(new SelectedPrevItemDetailsAdapter(
+                mContext, mLauncherItemsDetailsModel));
+
+        // this is to set the view from XML inside AlertDialog
+        mAlert.setView(alertLayout);
     }
 
     public void show() {
@@ -100,4 +124,7 @@ public class LaundryItemsDialog {
         }
     }
 
+    private String convertMillisToDateTime (long dateTimeInMillis) {
+        return DateFormat.format("dd-MM-yyyy hh:mm", dateTimeInMillis).toString();
+    }
 }

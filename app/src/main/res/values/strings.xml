@@ -7,5 +7,5 @@
     <string name="save">Save</string>
     <string name="enterNewItem">Enter new laundry item</string>
     <string name="date_time">Date Time: %1$s</string>
-    <string name="total_count">Total Count: %1$d</string>
+    <string name="total_count">Laundry Items Count: %1$d</string>
 </resources>

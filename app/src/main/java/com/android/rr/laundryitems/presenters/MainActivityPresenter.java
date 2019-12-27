@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.adapter.LaundryItemsAdapter;
+import com.android.rr.laundryitems.models.LauncherItemsDetailsModel;
 import com.android.rr.laundryitems.models.LaundryItemsDB;
 import com.android.rr.laundryitems.models.LaundryItemsModel;
 import com.android.rr.laundryitems.utils.LaundryItemsDialog;
@@ -33,6 +34,7 @@ public class MainActivityPresenter implements View.OnClickListener {
     public MainActivityPresenter (MainActivity mainActivity) {
         mMainActivity = mainActivity;
         mLaundryItemsDB = new LaundryItemsDB(mMainActivity);
+        mLaundryItemsDB.deleteOlderSavedLaundryDetails();
     }
 
     public void loadDefaultItems() {

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.android.rr.laundryitems.adapter.LaundryDetailsAdapter;
 import com.android.rr.laundryitems.models.LauncherItemsDetailsModel;
 import com.android.rr.laundryitems.models.LaundryItemsDB;
+import com.android.rr.laundryitems.utils.LaundryItemsDialog;
 import com.android.rr.laundryitems.views.LaundryDetailsActivity;
 
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 public class LaundryDetailsActivityPresenter {
     private final String TAG = LaundryDetailsActivityPresenter.class.getSimpleName();
     private LaundryDetailsActivity mLaundryDetailsActivity;
-    private LaundryDetailsAdapter mLaundryDetailsAdapter;
     private LaundryItemsDB mLaundryItemsDB;
     private List<LauncherItemsDetailsModel> mLauncherItemsDetailsModels;
 
@@ -23,15 +23,17 @@ public class LaundryDetailsActivityPresenter {
 
     public void initializeAdapter () {
         mLauncherItemsDetailsModels = mLaundryItemsDB.getSavedLaundryItemsDetails();
-        mLaundryDetailsAdapter = new LaundryDetailsAdapter(mLaundryDetailsActivity,
+        final LaundryDetailsAdapter laundryDetailsAdapter =
+                new LaundryDetailsAdapter(mLaundryDetailsActivity,
                 LaundryDetailsActivityPresenter.this,
                 mLauncherItemsDetailsModels);
-        mLaundryDetailsActivity.setAdapter(mLaundryDetailsAdapter);
+        mLaundryDetailsActivity.setAdapter(laundryDetailsAdapter);
     }
 
     public void showLaundryFullDetails (int position) {
         Log.e(TAG, "showLaundryFullDetails.. position: "+position);
-
+        new LaundryItemsDialog(mLaundryDetailsActivity,
+                mLauncherItemsDetailsModels.get(position)).show();
     }
 
     public interface ILaundryDetailsActivityPresenter {
