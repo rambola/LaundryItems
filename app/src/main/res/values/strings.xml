@@ -8,4 +8,6 @@
     <string name="enterNewItem">Enter new laundry item</string>
     <string name="date_time">Date Time: %1$s</string>
     <string name="total_count">Laundry Items Count: %1$d</string>
+    <string name="prev_item_details">%1$s: %2$s</string>
+    <string name="enter_item_name_to_save">Please enter item name before saving to your laundry list..</string>
 </resources>

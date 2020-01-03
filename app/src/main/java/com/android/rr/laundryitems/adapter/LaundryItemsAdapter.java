@@ -33,7 +33,6 @@ public class LaundryItemsAdapter extends RecyclerView.Adapter<LaundryItemsAdapte
 
     public void resetFields (List<String> laundryItemsList) {
         mLaundryItemsList.clear();
-        Log.e(TAG, "resetFields, map count: "+mLaundryItemCount.size());
         mLaundryItemCount.clear();
         mLaundryItemsList.addAll(laundryItemsList);
         this.notifyDataSetChanged();
@@ -53,8 +52,8 @@ public class LaundryItemsAdapter extends RecyclerView.Adapter<LaundryItemsAdapte
         holder.itemNameTV.setText(itemName+"    ");
         holder.customEditTextChangeListener.textChangePosition(holder.getAdapterPosition());
         if (null != mLaundryItemCount && mLaundryItemCount.size() > 0) {
-            String itemCount = mLaundryItemCount.containsKey(itemName) ? mLaundryItemCount.get(itemName) : "";
-            //Log.e(TAG, "onBindViewHolder, itemName: "+itemName+", itemCount: "+itemCount);
+            final String itemCount = mLaundryItemCount.containsKey(itemName) ?
+                    mLaundryItemCount.get(itemName) : "";
             holder.itemQuantityET.setText(itemCount);
         } else {
             holder.itemQuantityET.setText("");
@@ -94,14 +93,17 @@ public class LaundryItemsAdapter extends RecyclerView.Adapter<LaundryItemsAdapte
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //int position = (int) holder.itemQuantityET.getTag();
-            //Log.e(TAG, "onTextChanged.... position: "+position+", item name: "+mLaundryItemsList.get(position)+", s: "+s.toString());
             mLaundryItemCount.put(mLaundryItemsList.get(position), s.toString());
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            //Log.e(TAG, "afterTextChanged.... s: "+s.toString());
         }
     }
+
+    public HashMap<String, String> getEnteredLaundryItemsDetails () {
+        Log.i(TAG, "items to save: "+mLaundryItemCount.size());
+        return mLaundryItemCount;
+    }
+
 }

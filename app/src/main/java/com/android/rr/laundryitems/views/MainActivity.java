@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.rr.laundryitems.R;
@@ -31,8 +32,9 @@ public class MainActivity extends AppCompatActivity implements
     private Animation rotate_forward;
     private Animation rotate_backward;
     private boolean mIsFabOpen;
-    private boolean mIsKeyboardOpen;
+//    private boolean mIsKeyboardOpen;
     private final String TAG = MainActivity.class.getSimpleName();
+    private FrameLayout mFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements
         mPrevSavedTV = findViewById(R.id.prevSavedItemsTV);
         mAddItemTV = findViewById(R.id.addLaundryItemTV);
         mDeleteItemTV = findViewById(R.id.deleteLaundryItemTV);
+        mFrameLayout = findViewById(R.id.menuItemsFL);
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 try {
-                    mMainActivityPresenter.getLaundryDataAndSaveToDB(mRecyclerView);
+                    mMainActivityPresenter.getLaundryDataAndSaveToDB();
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void animateFAB() {
-        if (!mIsKeyboardOpen) {
+//        if (!mIsKeyboardOpen) {
             if (mIsFabOpen) {
                 mFloatingActionButton.startAnimation(rotate_backward);
                 mPrevSavedTV.startAnimation(fab_close);
@@ -95,8 +98,10 @@ public class MainActivity extends AppCompatActivity implements
                 mAddItemTV.setClickable(false);
                 mDeleteItemTV.setClickable(false);
                 mIsFabOpen = false;
+                mFrameLayout.startAnimation(fab_close);
             } else {
                 mFloatingActionButton.startAnimation(rotate_forward);
+                mFrameLayout.startAnimation(fab_open);
                 mPrevSavedTV.startAnimation(fab_open);
                 mAddItemTV.startAnimation(fab_open);
                 mDeleteItemTV.startAnimation(fab_open);
@@ -105,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements
                 mDeleteItemTV.setClickable(true);
                 mIsFabOpen = true;
             }
-        }
+//        }
     }
 
     @Override
     public void checkAndCloseFAB(boolean isKeyboardOpen) {
-        mIsKeyboardOpen = isKeyboardOpen;
+//        mIsKeyboardOpen = isKeyboardOpen;
         if (mIsFabOpen) animateFAB();
     }
 

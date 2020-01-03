@@ -15,9 +15,10 @@ import com.android.rr.laundryitems.presenters.MainActivityPresenter;
 import java.util.List;
 
 public class ItemsDeleteAdapter extends BaseAdapter {
-    List<String> mLaundryItemsList;
-    Context mContext;
-    MainActivityPresenter mMainActivityPresenter;
+    private final String TAG = ItemsDeleteAdapter.class.getSimpleName();
+    private List<String> mLaundryItemsList;
+    private Context mContext;
+    private MainActivityPresenter mMainActivityPresenter;
 
     public ItemsDeleteAdapter (Context context, MainActivityPresenter mainActivityPresenter,
                                List<String> laundryItemsList) {
@@ -80,6 +81,7 @@ public class ItemsDeleteAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
+            Log.i(TAG, "item to delete: "+mPosition);
             mMainActivityPresenter.deleteLaundryItem(mLaundryItemsList.get(mPosition));
             mLaundryItemsList.remove(mPosition);
             if (mLaundryItemsList.size() > 0) {

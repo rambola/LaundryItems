@@ -31,7 +31,7 @@ public class LaundryDetailsActivityPresenter {
     }
 
     public void showLaundryFullDetails (int position) {
-        Log.e(TAG, "showLaundryFullDetails.. position: "+position);
+        Log.i(TAG, "show full for: "+position);
         new LaundryItemsDialog(mLaundryDetailsActivity,
                 mLauncherItemsDetailsModels.get(position)).show();
     }

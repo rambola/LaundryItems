@@ -41,16 +41,11 @@ public class LaundryDetailsAdapter extends RecyclerView.Adapter<LaundryDetailsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        Log.e(TAG, "onBindViewHolder... date: "+mLauncherItemsDetailsModels.get(i).
+        final String convertedDateTime = convertMillisToDateTime(mLauncherItemsDetailsModels.get(i).
                 getDateTimeInMillis());
-        Log.e(TAG, "onBindViewHolder... date: "+mLauncherItemsDetailsModels.get(i).
-                getLaundryItemsModels().size());
-        String convertedDateTime = convertMillisToDateTime(mLauncherItemsDetailsModels.get(i).
-                getDateTimeInMillis());
-        int totalCount = mLauncherItemsDetailsModels.get(i).getLaundryItemsModels().size();
+        final int totalCount = mLauncherItemsDetailsModels.get(i).getLaundryItemsModels().size();
         myViewHolder.mDateTimeTV.setText(mContext.getString(R.string.date_time, convertedDateTime));
         myViewHolder.mTotalCountTV.setText(mContext.getString(R.string.total_count, totalCount));
-
         myViewHolder.mCardView.setOnClickListener(new MyClickListener(i));
     }
 
@@ -85,6 +80,7 @@ public class LaundryDetailsAdapter extends RecyclerView.Adapter<LaundryDetailsAd
 
         @Override
         public void onClick(View v) {
+            Log.i(TAG, "show details of: "+mClickPosition);
             mLaundryDetailsActivityPresenter.showLaundryFullDetails(mClickPosition);
         }
     }

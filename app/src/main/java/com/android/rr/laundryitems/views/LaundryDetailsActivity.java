@@ -9,12 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.adapter.LaundryDetailsAdapter;
 import com.android.rr.laundryitems.presenters.LaundryDetailsActivityPresenter;
-import com.android.rr.laundryitems.utils.MyDividerItemDecoration;
 
 public class LaundryDetailsActivity extends AppCompatActivity implements
         LaundryDetailsActivityPresenter.ILaundryDetailsActivityPresenter {
     private RecyclerView mRecyclerView;
-    private LaundryDetailsActivityPresenter mLaundryDetailsActivityPresenter;
+//    private LaundryDetailsActivityPresenter mLaundryDetailsActivityPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +27,14 @@ public class LaundryDetailsActivity extends AppCompatActivity implements
 //        mRecyclerView.addItemDecoration(new MyDividerItemDecoration(
 //                getApplicationContext(), LinearLayoutManager.VERTICAL, 9));
 
-        mLaundryDetailsActivityPresenter = new LaundryDetailsActivityPresenter(
-                LaundryDetailsActivity.this);
-        mLaundryDetailsActivityPresenter.initializeAdapter();
+        /*mLaundryDetailsActivityPresenter = */new LaundryDetailsActivityPresenter(
+                LaundryDetailsActivity.this).initializeAdapter();
+//        mLaundryDetailsActivityPresenter.initializeAdapter();
     }
 
     @Override
     public void setAdapter(LaundryDetailsAdapter laundryDetailsAdapter) {
         mRecyclerView.setAdapter(laundryDetailsAdapter);
     }
+
 }

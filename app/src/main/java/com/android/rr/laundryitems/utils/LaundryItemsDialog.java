@@ -2,6 +2,7 @@ package com.android.rr.laundryitems.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.adapter.ItemsDeleteAdapter;
@@ -18,7 +20,6 @@ import com.android.rr.laundryitems.models.LauncherItemsDetailsModel;
 import com.android.rr.laundryitems.models.LaundryItemsDB;
 import com.android.rr.laundryitems.presenters.MainActivityPresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LaundryItemsDialog {
@@ -62,10 +63,11 @@ public class LaundryItemsDialog {
                 String enteredItem = addItemET.getText().toString().trim();
                 Log.i(TAG, "entered item: "+enteredItem);
 
-                if (enteredItem.length() > 0)
-                    mMainActivityPresenter.saveLaundryItem(enteredItem);
+                if (TextUtils.isEmpty(enteredItem))
+                    Toast.makeText(mContext, R.string.enter_item_name_to_save,
+                            Toast.LENGTH_SHORT).show();
                 else
-                    Log.i(TAG, "Please enter item name before saving to your laundry list..");
+                    mMainActivityPresenter.saveLaundryItem(enteredItem);
 
                 mDialog.dismiss();
             }
@@ -127,4 +129,5 @@ public class LaundryItemsDialog {
     private String convertMillisToDateTime (long dateTimeInMillis) {
         return DateFormat.format("dd-MM-yyyy hh:mm", dateTimeInMillis).toString();
     }
+
 }

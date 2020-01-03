@@ -21,4 +21,5 @@ public class LauncherItemsDetailsModel {
     void setLaundryItemsModels(List<LaundryItemsModel> laundryItemsModels) {
         this.laundryItemsModels = laundryItemsModels;
     }
+
 }

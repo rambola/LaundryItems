@@ -8,9 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LaundryItemsDB extends SQLiteOpenHelper {
     private final String TAG = LaundryItemsDB.class.getSimpleName();
@@ -60,8 +58,8 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
         List<String> laundryItemNames = null;
 
         mSqLiteDatabase = this.getReadableDatabase();
-        String orderBy = COLUMN_ITEM_NAME+" ASC";
-        Cursor cursor = mSqLiteDatabase.query(ITEM_NAMES_TABLE, null, null,
+        final String orderBy = COLUMN_ITEM_NAME+" ASC";
+        final Cursor cursor = mSqLiteDatabase.query(ITEM_NAMES_TABLE, null, null,
                 null, null, null, orderBy);
 
         if (null != cursor && cursor.getCount() > 0) {
@@ -77,24 +75,22 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
 
     public int getTotalLaundryItemsCount () {
         mSqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = mSqLiteDatabase.query(ITEM_NAMES_TABLE, null, null,
+        final Cursor cursor = mSqLiteDatabase.query(ITEM_NAMES_TABLE, null, null,
                 null, null, null, null);
 
         return null != cursor ? cursor.getCount() : -4;
     }
 
     public void deleteLaundryItem (String laundryItemsToDelete) {
-//        if (null != laundryItemsToDelete && laundryItemsToDelete.length > 0) {
-            mSqLiteDatabase = this.getWritableDatabase();
-            String whereClause = COLUMN_ITEM_NAME + "=?";
-            String[] whereArgs = {laundryItemsToDelete};
-            mSqLiteDatabase.delete(ITEM_NAMES_TABLE, whereClause, whereArgs);
-//        }
+        mSqLiteDatabase = this.getWritableDatabase();
+        final String whereClause = COLUMN_ITEM_NAME + "=?";
+        final String[] whereArgs = {laundryItemsToDelete};
+        mSqLiteDatabase.delete(ITEM_NAMES_TABLE, whereClause, whereArgs);
     }
 
     public void saveLaundryItemsDetails (List<LaundryItemsModel> laundryItemsModels) {
         mSqLiteDatabase = this.getWritableDatabase();
-        Log.e(TAG, "saveLaundryItemDetails..... laundryItemsModels: "+laundryItemsModels.size());
+        Log.i(TAG, "save laundry items: "+laundryItemsModels.size());
         for (LaundryItemsModel laundryItemsModel : laundryItemsModels) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_ITEM_NAME, laundryItemsModel.getItemName());
@@ -107,12 +103,12 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
     }
 
     public List<LauncherItemsDetailsModel> getSavedLaundryItemsDetails () {
-        List<Long> dateTimeInMillsList = getDateTimeInMillis();
+        final List<Long> dateTimeInMillsList = getDateTimeInMillis();
         List<LauncherItemsDetailsModel> laundryItemsDetailsModels = new ArrayList<>();
 
         if (null != dateTimeInMillsList && dateTimeInMillsList.size() > 0) {
             for (long dateTimeInMillis : dateTimeInMillsList) {
-                Log.i(TAG, "getSavedLaundryItemsDetails... dateTimeInMillis: "+dateTimeInMillis);
+                Log.i(TAG, "get saved laundry items for: "+dateTimeInMillis);
                 List<LaundryItemsModel> laundryItemsModels = getLaundryDetailsForGivenTime(
                         dateTimeInMillis);
                 LauncherItemsDetailsModel launcherItemsDetailsModel = new LauncherItemsDetailsModel();
@@ -123,69 +119,42 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
             }
         }
 
-        Log.i(TAG, "getSavedLaundryItemsDetails... before return size: "+
+        Log.i(TAG, "get saved laundry items size: "+
                 laundryItemsDetailsModels.size());
         return  laundryItemsDetailsModels;
     }
-
-    /*private HashMap<String, Long> getDateTimeInMillis () {
-        HashMap<String, Long> dateTimeMillsMap = new HashMap<>();
-        mSqLiteDatabase = this.getReadableDatabase();
-        String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" DESC";
-        String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
-        Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, null,
-                null, null, null, orderBy);
-
-        if (null != cursor && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            int count=0;
-
-            while (cursor.moveToNext()) {
-                Log.i(TAG, "getDateTimeInMillis().. dateTimeInMillis.. "+cursor.getLong(
-                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))+", count: "+count);
-                dateTimeMillsMap.put("dateTimeInMillis"+count, cursor.getLong(
-                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
-                count++;
-            }
-        }
-
-        Log.i(TAG, "getDateTimeInMillis().. before return map size is: "+dateTimeMillsMap.size());
-        return dateTimeMillsMap;
-    }*/
 
     private List<Long> getDateTimeInMillis () {
         List<Long> dateTimeMillsList = new ArrayList<>();
         mSqLiteDatabase = this.getReadableDatabase();
 
-        String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
-        String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" DESC";
-        Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, null,
+        final String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
+        final String orderBy = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+" DESC";
+        final Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, null,
                 null, null, null, orderBy);
 
         if (null != cursor && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                Log.i(TAG, "getDateTimeInMillis().. dateTimeInMillis.. "+cursor.getLong(
-                        cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
                 dateTimeMillsList.add(cursor.getLong(
                         cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
             }
         }
 
-        Log.i(TAG, "getDateTimeInMillis().. before return map size is: "+dateTimeMillsList.size());
+        Log.i(TAG, "get date time size: "+dateTimeMillsList.size());
         return dateTimeMillsList;
     }
 
     private List<LaundryItemsModel> getLaundryDetailsForGivenTime (long dateTimeInMillis) {
         List<LaundryItemsModel> savedLaundryItems = null;
         mSqLiteDatabase = this.getReadableDatabase();
-        String selection = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+"=?";
-        String[] selectionArgs = {String.valueOf(dateTimeInMillis)};
-        Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, null, selection,
+        final String selection = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+"=?";
+        final String[] selectionArgs = {String.valueOf(dateTimeInMillis)};
+        final Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, null, selection,
                 selectionArgs, null, null, null);
-        Log.e(TAG, "getLaundryDetailsForGivenTime... dateTimeInMillis.. "+dateTimeInMillis+", cursor size: "+(null != cursor ? cursor.getCount() : -1));
+        Log.i(TAG, "get laundry details for: "+dateTimeInMillis+
+                ", count: "+(null != cursor ? cursor.getCount() : -1));
 
         if (null != cursor && cursor.getCount() > 0) {
-//            cursor.moveToFirst();
             savedLaundryItems = new ArrayList<>();
 
             while (cursor.moveToNext()) {
@@ -194,13 +163,10 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex(COLUMN_ITEM_QUANTITY)),
                         cursor.getLong(cursor.getColumnIndex(
                                 COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS))));
-
-                Log.i(TAG, "getLaundryDetailsForGivenTime... inside while: "+
-                        (null != savedLaundryItems ? savedLaundryItems.size() : -1));
             }
         }
 
-        Log.i(TAG, "getLaundryDetailsForGivenTime... before return size: "+
+        Log.i(TAG, "get laundry details size: "+
                 (null != savedLaundryItems ? savedLaundryItems.size() : -1));
         return savedLaundryItems;
     }
@@ -214,7 +180,6 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
         final long currentTimeInMillis = System.currentTimeMillis();
         final long sixMonthsTimeInMillisFromCurrent = currentTimeInMillis - sixMonthsTimeInMillis;
 
-        Log.e(TAG, "deleteOlderSavedLaundryDetails... sixMonthsTimeInMillisFromCurrent: "+sixMonthsTimeInMillisFromCurrent);
         final String[] columns = {COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS};
         final String whereClause = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+"<=?";
         final String[] whereArgs = {String.valueOf(sixMonthsTimeInMillisFromCurrent)};
@@ -222,20 +187,18 @@ public class LaundryItemsDB extends SQLiteOpenHelper {
         mSqLiteDatabase = this.getReadableDatabase();
         final Cursor cursor = mSqLiteDatabase.query(SAVE_ITEMS_TABLE, columns, whereClause, whereArgs,
                 null, null, null);
-        Log.e(TAG, "deleteOlderSavedLaundryDetails... cursor count: "+(null != cursor?cursor.getCount():-1));
+        Log.i(TAG, "delete old items count: "+(null != cursor?cursor.getCount():-1));
         if (null != cursor && cursor.getCount() > 0) {
             while(cursor.moveToNext()) {
                 final String dateTimeInMillisToDelete = String.valueOf(cursor.getLong(
                         cursor.getColumnIndex(COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS)));
-                Log.e(TAG, "deleteOlderSavedLaundryDetails... dateTimeInMillisToDelete: "+
-                        dateTimeInMillisToDelete);
                 deleteSavedLaundryItemBaseOnTime(dateTimeInMillisToDelete);
             }
         }
     }
 
     private void deleteSavedLaundryItemBaseOnTime (String timeInMillis) {
-        Log.e(TAG, "deleteSavedLaundryItemBaseOnTime... timeInMillis: "+timeInMillis);
+        Log.i(TAG, "delete old laundry item for: "+timeInMillis);
         final String whereClause = COLUMN_SAVE_ITEM_DATE_TIME_IN_MILLIS+"=?";
         final String[] whereArgs = {String.valueOf(timeInMillis)};
 

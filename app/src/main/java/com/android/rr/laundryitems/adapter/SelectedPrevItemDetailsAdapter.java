@@ -1,18 +1,15 @@
 package com.android.rr.laundryitems.adapter;
 
 import android.content.Context;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.models.LauncherItemsDetailsModel;
 import com.android.rr.laundryitems.models.LaundryItemsModel;
-import com.android.rr.laundryitems.presenters.MainActivityPresenter;
 
 import java.util.List;
 
@@ -21,7 +18,8 @@ public class SelectedPrevItemDetailsAdapter extends BaseAdapter {
     final private Context mContext;
 
 
-    public SelectedPrevItemDetailsAdapter(Context context, LauncherItemsDetailsModel launcherItemsDetailsModel) {
+    public SelectedPrevItemDetailsAdapter(Context context,
+                                          LauncherItemsDetailsModel launcherItemsDetailsModel) {
         mContext = context;
         mLaundryItemsModelsList = launcherItemsDetailsModel.getLaundryItemsModels();
     }
@@ -57,9 +55,9 @@ public class SelectedPrevItemDetailsAdapter extends BaseAdapter {
         } else
             viewHolder = (ViewHolder) convertView.getTag();
 
-        viewHolder.itemNameAndQuantityTV.setText(
-                mLaundryItemsModelsList.get(position).getItemName()+": "+
-                mLaundryItemsModelsList.get(position).getItemQuantity());
+        viewHolder.itemNameAndQuantityTV.setText(mContext.getString(R.string.prev_item_details,
+                mLaundryItemsModelsList.get(position).getItemName(),
+                mLaundryItemsModelsList.get(position).getItemQuantity()));
 
         return convertView;
     }

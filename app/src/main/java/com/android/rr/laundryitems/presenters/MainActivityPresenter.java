@@ -1,18 +1,14 @@
 package com.android.rr.laundryitems.presenters;
 
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.rr.laundryitems.R;
 import com.android.rr.laundryitems.adapter.LaundryItemsAdapter;
-import com.android.rr.laundryitems.models.LauncherItemsDetailsModel;
 import com.android.rr.laundryitems.models.LaundryItemsDB;
 import com.android.rr.laundryitems.models.LaundryItemsModel;
 import com.android.rr.laundryitems.utils.LaundryItemsDialog;
@@ -21,6 +17,7 @@ import com.android.rr.laundryitems.views.LaundryDetailsActivity;
 import com.android.rr.laundryitems.views.MainActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivityPresenter implements View.OnClickListener {
@@ -126,24 +123,21 @@ public class MainActivityPresenter implements View.OnClickListener {
         }
     }
 
-    public void getLaundryDataAndSaveToDB (RecyclerView recyclerView) throws NullPointerException {
-        int recyclerItemCount = recyclerView.getAdapter().getItemCount();
-        int emptyFieldsCount = 0;
-        List<LaundryItemsModel> laundryItemsModels = new ArrayList<>();;
+    public void getLaundryDataAndSaveToDB () throws NullPointerException {
+        final HashMap<String, String> hashMap = mLaundryItemsAdapter.getEnteredLaundryItemsDetails();
+        final int recyclerItemCount = null != hashMap ? hashMap.size() : 0;
+        Log.i(TAG, "getLaundryDataAndSaveToDB, laundry item count: "+recyclerItemCount);
+        List<LaundryItemsModel> laundryItemsModels = new ArrayList<>();
         long currentDateTimeInMillis = System.currentTimeMillis();
-        Log.e(TAG, "getLaundryDataAndSaveToDB, adapterItemCount: "+recyclerItemCount);
+        int emptyFieldsCount = 0;
 
-        for (int i=0; i<recyclerItemCount; i++) {
-            View view = recyclerView.getChildAt(i);
-            TextView textView = view.findViewById(R.id.itemNameTV);
-            EditText editText = view.findViewById(R.id.itemQuantityET);
+        for (String key : hashMap.keySet()) {
+            String laundryItem = key.trim();
+            String itemQuantity = hashMap.get(key).trim();
 
-            String laundryItem = textView.getText().toString().trim();
-            String itemQuantity = editText.getText().toString().trim();
-
-            Log.e(TAG, "itemNameTV: "+laundryItem+ ", quantity: "+itemQuantity+
-                    ", currentDateTimeInMillis: "+ currentDateTimeInMillis+", emptyFieldsCount: "+
-                    emptyFieldsCount);
+        /*Log.e(TAG, "item: "+laundryItem+ ", quantity: "+itemQuantity+
+                ", currentDateTimeInMillis: "+ currentDateTimeInMillis+", emptyFieldsCount: "+
+                emptyFieldsCount);*/
 
             if (TextUtils.isEmpty(itemQuantity)) {
                 emptyFieldsCount++;
@@ -153,9 +147,8 @@ public class MainActivityPresenter implements View.OnClickListener {
             laundryItemsModels.add(new LaundryItemsModel(laundryItem, itemQuantity,
                     currentDateTimeInMillis));
         }
-
         if (emptyFieldsCount == recyclerItemCount)
-            Toast.makeText(mMainActivity, "Please fill the quantity for items...",
+            Toast.makeText(mMainActivity, "Nothing to save!!",
                     Toast.LENGTH_SHORT).show();
         else
             saveLaundryItemsDetails(laundryItemsModels);
